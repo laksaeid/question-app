@@ -1,6 +1,6 @@
 import {
   Box,
-  Button,
+  Button, CircularProgress,
   FormControl,
   FormHelperText,
   InputLabel,
@@ -12,6 +12,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z, ZodType } from "zod";
 import { Controller, useForm } from "react-hook-form";
 import { useQuestion } from "@/context";
+import {green, grey} from "@mui/material/colors";
+import axios from "axios";
+import {useState} from "react";
 
 interface FormData {
   questions: number | "";
@@ -20,6 +23,7 @@ interface FormData {
 }
 
 const StartForm = () => {
+  const [loading , setLoading] = useState(false)
   const { dispatch } = useQuestion();
   const schema: ZodType<FormData> = z.object({
     questions: z.number().min(1).max(10),
@@ -43,12 +47,14 @@ const StartForm = () => {
     mode: "all",
   });
 
-  const submitHandler = function (form: FormData) {
-    // console.log(form, state);
+  const submitHandler = async function (form: FormData) {
+    setLoading(true)
+    const token = await axios('https://opentdb.com/api_token.php?command=request')
+    setLoading(false)
     dispatch({
       type: "submitForm",
       payload: {
-        apiUrl: `https://opentdb.com/api.php?amount=${form.questions}&category=${form.Category}&difficulty=${form.difficulty}&token=c06162cb2a96fe50f8e10e20c605fa613adb7ca212984aabff061f7062d33bde`,
+        apiUrl: `https://opentdb.com/api.php?amount=${form.questions}&category=${form.Category}&difficulty=${form.difficulty}&token=${token.data.token}`,
       },
     });
   };
@@ -60,10 +66,10 @@ const StartForm = () => {
           width: "100%",
           display: "flex",
           flexDirection: "column",
-          gap: "10px",
-          bgcolor: "gray",
-          borderRadius: 5,
-          p: 5,
+          gap: "30px",
+          // bgcolor: "gray",
+          // borderRadius: 5,
+          // p: 5,
         }}
         component={"form"}
         onSubmit={handleSubmit(submitHandler)}
@@ -72,9 +78,9 @@ const StartForm = () => {
           control={control}
           render={() => {
             return (
-              <>
+
                 <TextField
-                  sx={{ bgcolor: "white" }}
+                  sx={{ bgcolor: 'white'}}
                   variant={"filled"}
                   {...register("questions", {
                     valueAsNumber: true,
@@ -83,7 +89,7 @@ const StartForm = () => {
                   error={!!errors.questions}
                   helperText={errors.questions?.message}
                 />
-              </>
+
             );
           }}
           name={"questions"}
@@ -94,7 +100,7 @@ const StartForm = () => {
           render={({ field }) => {
             return (
               <FormControl
-                sx={{ bgcolor: "white" }}
+                sx={{ bgcolor:'white' }}
                 variant="filled"
                 fullWidth
                 error={!!errors.Category}
@@ -128,7 +134,7 @@ const StartForm = () => {
           render={({ field }) => {
             return (
               <FormControl
-                sx={{ bgcolor: "white" }}
+                sx={{ bgcolor:'white' }}
                 variant="filled"
                 fullWidth
                 error={!!errors.difficulty}
@@ -137,6 +143,7 @@ const StartForm = () => {
                   Difficulty
                 </InputLabel>
                 <Select
+
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
                   label="Difficulty"
@@ -156,8 +163,16 @@ const StartForm = () => {
           }}
           name={"difficulty"}
         />
-        <Button variant={"contained"} color={"secondary"} type={"submit"}>
-          submit
+        <Button variant={"contained"} sx={{
+          py:2,
+          borderRadius:'10px',
+          bgcolor:green[500],
+          '&:hover':{
+            bgcolor:green[800]
+          }
+
+        }} type={"submit"}>
+          submit {loading &&<CircularProgress sx={{pl:1,ml:1}} color="inherit" />}
         </Button>
       </Box>
     </>

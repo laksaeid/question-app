@@ -5,6 +5,7 @@ import {createContext, ReactNode, useContext, useReducer} from "react";
 interface InitialType{
     apiUrl:string
     page:string
+    questionNumber:number
 }
 interface DispatchType {
     type:string
@@ -19,7 +20,9 @@ interface Props {
 }
 const initial={
     apiUrl:'',
-    page:'startForm'
+    page:'startForm',
+    questionNumber:0
+
 }
 const reducer = function(state:InitialType,action:DispatchType):InitialType{
     switch (action.type) {
@@ -29,6 +32,13 @@ const reducer = function(state:InitialType,action:DispatchType):InitialType{
                 page:'questionPage',
                 apiUrl:action.payload.apiUrl
             }
+            case 'questionNumber':
+            return {
+                ...state,
+                questionNumber:state.questionNumber+1
+            }
+            case 'reset':
+            return initial
         default:
             return state
     }

@@ -2,8 +2,19 @@ import {Container, CssBaseline} from "@mui/material";
 
 import {QuestionProvider} from "@/context";
 import { Main } from "@/components";
-
+// const theme = createTheme({
+//     components:{
+//         MuiTextField:{
+//             defaultProps:{
+//                 label:{
+//
+//                 }
+//             }
+//         }
+//     }
+// })
 const App = () => {
+
 
   return (
     <>

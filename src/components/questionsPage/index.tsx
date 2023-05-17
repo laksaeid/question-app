@@ -1,15 +1,15 @@
-import { useQuestion } from "@/context";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { Box, Button, LinearProgress, Stack, Typography } from "@mui/material";
-import { green } from "@mui/material/colors";
-import { Questions } from "@/components";
-import ResultModal from "@/components/modal";
+import { useQuestion } from '@/context';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { Box, Button, LinearProgress, Stack, Typography } from '@mui/material';
+import { green } from '@mui/material/colors';
+import { Questions } from '@/components';
+import ResultModal from '@/components/modal';
 
 const QuestionPage = () => {
   const { state, dispatch } = useQuestion();
   const [questions, setQuestions] = useState<QuestiosType[]>([]);
-  const [currect, setCurrect] = useState<string[]>([]);
+  const [correct, setCorrect] = useState<string[]>([]);
   const [answers, setAnswers] = useState<string[]>([]);
   const [resultModal, SetResultModal] = useState(false);
   const handleOpen = () => SetResultModal(true);
@@ -28,31 +28,32 @@ const QuestionPage = () => {
   const handleNextQuestion = function (answer: string) {
     console.log(answer);
     if (state.questionNumber < questions.length) {
-      dispatch({ type: "questionNumber" });
-      setCurrect([...currect, questions[state.questionNumber].correct_answer]);
+      dispatch({ type: 'questionNumber' });
+      setCorrect([...correct, questions[state.questionNumber].correct_answer]);
       setAnswers([...answers, answer]);
     }
   };
   const showResult = function () {
     handleOpen();
   };
+  console.log(questions[state.questionNumber]?.correct_answer);
   return (
     <Box
       sx={{
-        width: "100%",
+        width: '100%',
         bgcolor: green[200],
-        borderRadius: "10px",
+        borderRadius: '10px',
         px: 5,
         pb: 3,
       }}
     >
       <Typography
         sx={{
-          fontSize: "20px",
+          fontSize: '20px',
           py: 3,
         }}
         gutterBottom
-        align={"center"}
+        align={'center'}
       >
         {questions[state.questionNumber]?.question}
       </Typography>
@@ -61,19 +62,21 @@ const QuestionPage = () => {
           <LinearProgress color="success" />
         ) : state.questionNumber < questions.length ? (
           <Questions
+            correct={correct}
+            userAnswers={answers}
             data={questions[state.questionNumber]}
             onClick={handleNextQuestion}
           />
         ) : (
-          <Button onClick={showResult} sx={{ mt: 5 }} variant={"contained"}>
-            {" "}
-            see result{" "}
+          <Button onClick={showResult} sx={{ mt: 5 }} variant={'contained'}>
+            {' '}
+            see result{' '}
           </Button>
         )}
       </Stack>
       <ResultModal
         handleClose={handleClose}
-        currect={currect}
+        correct={correct}
         answers={answers}
         open={resultModal}
       />

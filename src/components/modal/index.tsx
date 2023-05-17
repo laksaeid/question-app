@@ -1,26 +1,26 @@
-import {Box, Button, Modal, Typography} from "@mui/material";
-import {useQuestion} from "@/context";
+import { Box, Button, Modal, Typography } from '@mui/material';
+import { useQuestion } from '@/context';
 const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-    borderRadius:'10px'
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+  borderRadius: '10px',
 };
-interface Props{
-    handleClose:()=>void
-    open:boolean
-    currect:string[]
-    answers:string[]
+interface Props {
+  handleClose: () => void;
+  open: boolean;
+  correct: string[];
+  answers: string[];
 }
-const ResultModal = ({ handleClose, open, currect, answers }: Props) => {
+const ResultModal = ({ handleClose, open, correct, answers }: Props) => {
   const { dispatch } = useQuestion();
-  const correctAnswers = currect.filter((ans, index) => ans === answers[index]);
+  const correctAnswers = correct.filter((ans, index) => ans === answers[index]);
   return (
     <div>
       <Modal
@@ -36,7 +36,7 @@ const ResultModal = ({ handleClose, open, currect, answers }: Props) => {
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             You answered {correctAnswers.length} from {answers.length}
           </Typography>
-          <Button onClick={()=>dispatch({type:'reset'})}>AGAIN</Button>
+          <Button onClick={() => dispatch({ type: 'reset' })}>AGAIN</Button>
         </Box>
       </Modal>
     </div>
